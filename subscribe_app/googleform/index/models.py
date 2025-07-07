@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from .choices import QUESTION_CHOICES
+from .utils.util import generate_token
 
 class User(AbstractUser):
     email = models.EmailField(unique=True)
@@ -53,6 +54,26 @@ class Form(BaseModel):
     background_color = models.CharField(max_length=20, default="#496188")
     collect_email = models.BooleanField(default=False)
     questions = models.ManyToManyField('Question', related_name='forms', blank=True)
+
+    def create_blank_form(user):
+        form_token = generate_token()
+        choices = Choice.objects.create(label='Option 1')
+        question = Question.objects.create(
+            text='Sample Question',
+            question_type='multiple choice',
+            required=True
+        )
+        question.choices.add(choices)
+        form = Form(
+            code=form_token,
+            title='Sample Form',
+            creator=user,
+            background_color='#496188',
+            collect_email=True
+        )
+        form.save()
+        form.questions.add(question)
+        return form
 
     class Meta:
         verbose_name = 'Form'

@@ -5,7 +5,7 @@ class FormSeralizer(serializers.ModelSerializer):
     class Meta:
         model = Form
         fields = '__all__'
-        exclude = ['created_at', 'updated_at']
+        exclude = ['created_at', 'updated_at', 'creator_id']
 
 class QuestionSeralizer(serializers.ModelSerializer):
     class Meta:
